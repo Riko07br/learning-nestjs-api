@@ -1,0 +1,20 @@
+version: "3.8"
+services:
+  mysql-db:
+    image: mysql:5.7.42-debian
+    restart: unless-stopped
+    ports: 
+      - 3306:3306
+    environment:
+      - MYSQL_DATABASE=nest-api-db
+      - MYSQL_ROOT_PASSWORD=12345678
+      - MYSQL_USER=nestjs_user
+      - MYSQL_PASSWORD=nestjs_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - backend
+volumes:
+  mysql_data:
+networks:
+  backend:
