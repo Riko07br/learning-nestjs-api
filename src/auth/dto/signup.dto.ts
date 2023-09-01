@@ -1,8 +1,10 @@
 import {
     IsDate,
     IsEmail,
+    IsEmpty,
     IsMobilePhone,
     IsNotEmpty,
+    IsOptional,
     IsString,
 } from "class-validator";
 
@@ -12,8 +14,11 @@ export class SignUpDto {
     first_name: string;
 
     @IsString()
+    @IsOptional()
     last_name: string;
 
+    @IsString()
+    @IsOptional()
     document: string;
 
     @IsEmail()
@@ -25,8 +30,10 @@ export class SignUpDto {
     password: string;
 
     @IsMobilePhone()
+    @IsOptional()
     phone: string;
 
     @IsDate()
+    @IsOptional()
     birth_date: Date;
 }
