@@ -4,6 +4,8 @@ import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { PrismaService } from "src/prisma/prisma.service";
 
+// Strategies are used in the authentication and authorization
+// Passport extends a strategy and let the dev customize th auth and validation
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, "jwt") {
     constructor(

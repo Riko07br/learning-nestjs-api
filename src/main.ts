@@ -4,6 +4,8 @@ import { AppModule } from "./app.module";
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
+
+    // Add validation decorators to DTOs
     app.useGlobalPipes(
         new ValidationPipe({
             whitelist: true,
