@@ -5,7 +5,7 @@ import { PrismaService } from "../src/prisma/prisma.service";
 import * as pactum from "pactum";
 import { SignInDto, SignUpDto } from "../src/auth/dto";
 import { EditUserDto } from "../src/user/dto";
-import { CreateOrderDto } from "../src/order/dto";
+import { CreateOrderDto, UpdateOrderDto } from "../src/order/dto";
 
 describe("App e2e", () => {
     let app: INestApplication;
@@ -163,7 +163,7 @@ describe("App e2e", () => {
             });
         });
         describe("Get order by id", () => {
-            it("Should order by id", () => {
+            it("Should get order by id", () => {
                 return pactum
                     .spec()
                     .get("/orders/{id}")
@@ -175,7 +175,50 @@ describe("App e2e", () => {
                     .expectBodyContains("$S{orderId}");
             });
         });
-        describe("Edit order", () => {});
-        describe("Delete order", () => {});
+        describe("Edit order by id", () => {
+            const updateOrderDto: UpdateOrderDto = {
+                description: "New test description",
+                quantity: 20,
+                price: 10.0,
+            };
+
+            it("Should edit order by id", () => {
+                return pactum
+                    .spec()
+                    .patch("/orders/{id}")
+                    .withPathParams("id", "$S{orderId}")
+                    .withHeaders({
+                        Authorization: "Bearer $S{access_token}",
+                    })
+                    .withBody(updateOrderDto)
+                    .expectStatus(200)
+                    .expectBodyContains("$S{orderId}")
+                    .inspect();
+            });
+        });
+
+        describe("Delete order by id", () => {
+            it("Should delete order by id", () => {
+                return pactum
+                    .spec()
+                    .delete("/orders/{id}")
+                    .withPathParams("id", "$S{orderId}")
+                    .withHeaders({
+                        Authorization: "Bearer $S{access_token}",
+                    })
+                    .expectStatus(204);
+            });
+
+            it("Should get empty orders", () => {
+                return pactum
+                    .spec()
+                    .get("/orders")
+                    .withHeaders({
+                        Authorization: "Bearer $S{access_token}",
+                    })
+                    .expectStatus(200)
+                    .expectBody([]);
+            });
+        });
     });
 });
