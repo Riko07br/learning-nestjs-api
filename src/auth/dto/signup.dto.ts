@@ -15,11 +15,11 @@ export class SignUpDto {
 
     @IsString()
     @IsOptional()
-    last_name: string;
+    last_name?: string;
 
     @IsString()
     @IsOptional()
-    document: string;
+    document?: string;
 
     @IsEmail()
     @IsNotEmpty()
@@ -31,9 +31,9 @@ export class SignUpDto {
 
     @IsMobilePhone()
     @IsOptional()
-    phone: string;
+    phone?: string;
 
     @IsDate()
     @IsOptional()
-    birth_date: Date;
+    birth_date?: Date;
 }
