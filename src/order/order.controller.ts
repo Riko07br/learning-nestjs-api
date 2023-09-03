@@ -8,6 +8,8 @@ import {
     Delete,
     UseGuards,
     ParseIntPipe,
+    HttpCode,
+    HttpStatus,
 } from "@nestjs/common";
 import { OrderService } from "./order.service";
 import { CreateOrderDto, UpdateOrderDto } from "./dto";
@@ -49,6 +51,7 @@ export class OrderController {
         return this.orderService.update(userId, id, updateOrderDto);
     }
 
+    @HttpCode(HttpStatus.NO_CONTENT)
     @Delete(":id")
     remove(
         @GetUser("id") userId: number,
