@@ -4,6 +4,8 @@ import { INestApplication, ValidationPipe } from "@nestjs/common";
 import { PrismaService } from "../src/prisma/prisma.service";
 import * as pactum from "pactum";
 import { SignInDto, SignUpDto } from "../src/auth/dto";
+import { EditUserDto } from "../src/user/dto";
+import { CreateOrderDto } from "../src/order/dto";
 
 describe("App e2e", () => {
     let app: INestApplication;
@@ -79,20 +81,100 @@ describe("App e2e", () => {
                     .spec()
                     .post("/auth/signin")
                     .withBody(signInDto)
-                    .expectStatus(200);
+                    .expectStatus(200)
+                    .stores("access_token", "access_token");
             });
         });
     });
 
     describe("User", () => {
-        describe("Get current user", () => {});
-        describe("Edit user", () => {});
+        describe("Get current user", () => {
+            it("Should get current user", () => {
+                return pactum
+                    .spec()
+                    .get("/users")
+                    .withHeaders({
+                        Authorization: "Bearer $S{access_token}",
+                    })
+                    .expectStatus(200);
+            });
+        });
+        describe("Edit user", () => {
+            it("Should edit current user", () => {
+                const dto: EditUserDto = {
+                    first_name: "Edited name",
+                    last_name: "Added last name",
+                };
+
+                return pactum
+                    .spec()
+                    .patch("/users")
+                    .withHeaders({
+                        Authorization: "Bearer $S{access_token}",
+                    })
+                    .withBody(dto)
+                    .expectStatus(200);
+            });
+        });
     });
 
     describe("Order", () => {
-        describe("Create order", () => {});
-        describe("Get orders", () => {});
-        describe("Get order by id", () => {});
+        describe("Get empty orders", () => {
+            it("Should get empty orders", () => {
+                return pactum
+                    .spec()
+                    .get("/orders")
+                    .withHeaders({
+                        Authorization: "Bearer $S{access_token}",
+                    })
+                    .expectStatus(200)
+                    .expectBody([]);
+            });
+        });
+
+        describe("Create order", () => {
+            it("Should create order", () => {
+                const dto: CreateOrderDto = {
+                    description: "Test order",
+                    quantity: 5,
+                    price: 5.5,
+                };
+                return pactum
+                    .spec()
+                    .post("/orders")
+                    .withHeaders({
+                        Authorization: "Bearer $S{access_token}",
+                    })
+                    .withBody(dto)
+                    .expectStatus(201)
+                    .stores("orderId", "id");
+            });
+        });
+
+        describe("Get orders", () => {
+            it("Should get orders", () => {
+                return pactum
+                    .spec()
+                    .get("/orders")
+                    .withHeaders({
+                        Authorization: "Bearer $S{access_token}",
+                    })
+                    .expectStatus(200);
+            });
+        });
+        describe("Get order by id", () => {
+            it("Should order by id", () => {
+                return pactum
+                    .spec()
+                    .get("/orders/{id}")
+                    .withPathParams("id", "$S{orderId}")
+                    .withHeaders({
+                        Authorization: "Bearer $S{access_token}",
+                    })
+                    .expectStatus(200)
+                    .expectBodyContains("$S{orderId}");
+            });
+        });
         describe("Edit order", () => {});
         describe("Delete order", () => {});
     });
