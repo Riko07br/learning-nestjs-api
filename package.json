@@ -9,7 +9,7 @@
     "db:dev:up": "docker compose up mysql-db -d",
     "db:dev:deploy": "npx prisma migrate deploy",
     "db:dev:rm": "docker compose rm mysql-db -s -v -f",
-    "db:dev:restart": "npm run db:dev:rm && npm run db:dev:up && sleep 1 && npm run db:dev:deploy",
+    "db:dev:restart": "npm run db:dev:rm && npm run db:dev:up && timeout 1 && npm run db:dev:deploy",
     "db:test:up": "docker compose up mysql-test-db -d",
     "db:test:deploy": "dotenv -e .env.test -- npx prisma migrate deploy",
     "db:test:rm": "docker compose rm mysql-test-db -s -v -f",
