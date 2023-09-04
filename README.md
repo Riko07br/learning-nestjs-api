@@ -8,9 +8,17 @@
 
 ## API backend para aprender o framework NestJs
 
-Esta API foi criada seguindo o tutorial [NestJs Course for Beginners - Create a REST API](https://youtu.be/GHTA143_b-s?si=VO3eZ0_kYvZkGJpt) e como o próprio nome já diz, segue os padrões REST
+Esta API foi criada seguindo o tutorial [NestJs Course for Beginners - Create a REST API](https://youtu.be/GHTA143_b-s?si=VO3eZ0_kYvZkGJpt) e como o próprio nome já diz, segue os padrões REST.
 
-## Running the app
+## Funcionalidades
+
+-   Criação, autenticação e autorização de usuários (users)
+-   CRUD para pedidos (orders) com estrutura REST
+-   Testes básicos e2e com Jest(Testes propiamente ditos) e Pactum(facilitar a montagem das respostas)
+-   ORM Prisma com banco de dados MySQL (container Docker)
+-   Documentação OpenAPI para endpoints com Swagger
+
+## Executando o app
 
 ```bash
 # development
@@ -26,14 +34,8 @@ $ npm run start:prod
 ## Test
 
 ```bash
-# unit tests
-$ npm run test
-
 # e2e tests
 $ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
 ```
 
 ## Custom
@@ -48,7 +50,7 @@ $ npm run db:dev:deploy
 # stop and remove the container
 $ npm run db:dev:rm
 
-
+# execute all the above in logical sense
 $ npm run db:dev:restart
 ```
 
