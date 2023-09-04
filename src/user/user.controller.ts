@@ -1,22 +1,38 @@
-import { Body, Controller, Get, Patch, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Patch, Post, UseGuards } from "@nestjs/common";
 import { User } from "@prisma/client";
 import { JwtGuard } from "../auth/guard";
 import { GetUser } from "../auth/decorator";
-import { EditUserDto } from "./dto";
 import { UserService } from "./user.service";
+import { ApiOkResponse, ApiTags } from "@nestjs/swagger";
+import { EditUserDto } from "./dto";
 
+@ApiTags("User")
 @UseGuards(JwtGuard)
 @Controller("users")
 export class UserController {
     constructor(private userService: UserService) {}
 
+    @ApiOkResponse({
+        description: "Return all users",
+    })
     @Get()
-    index(@GetUser() user: User) {
+    findAll() {
+        return this.userService.findAll();
+    }
+
+    @ApiOkResponse({
+        description: "Return current user",
+    })
+    @Get("me")
+    getCurrentUser(@GetUser() user: User) {
         return user;
     }
 
-    @Patch()
-    update(@GetUser("id") userId: number, @Body() dto: EditUserDto) {
+    @ApiOkResponse({
+        description: "Update current user",
+    })
+    @Patch("me")
+    updateCurrentUser(@GetUser("id") userId: number, @Body() dto: EditUserDto) {
         return this.userService.editUser(userId, dto);
     }
 }
