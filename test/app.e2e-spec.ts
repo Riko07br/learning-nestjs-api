@@ -92,13 +92,42 @@ describe("App e2e", () => {
             it("Should get current user", () => {
                 return pactum
                     .spec()
-                    .get("/users")
+                    .get("/users/me")
                     .withHeaders({
                         Authorization: "Bearer $S{access_token}",
                     })
                     .expectStatus(200);
             });
         });
+
+        describe("Get all users", () => {
+            for (let i = 1; i <= 3; i++) {
+                const signUpDto: SignUpDto = {
+                    email: "test" + i + "@testing.com",
+                    password: "123456789",
+                    first_name: "Tester",
+                };
+                it("Should signup " + i, () => {
+                    return pactum
+                        .spec()
+                        .post("/auth/signup")
+                        .withBody(signUpDto)
+                        .expectStatus(201);
+                });
+            }
+
+            it("Should get all users in the database", () => {
+                return pactum
+                    .spec()
+                    .get("/users")
+                    .withHeaders({
+                        Authorization: "Bearer $S{access_token}",
+                    })
+                    .expectStatus(200)
+                    .inspect();
+            });
+        });
+
         describe("Edit user", () => {
             it("Should edit current user", () => {
                 const dto: EditUserDto = {
@@ -108,7 +137,7 @@ describe("App e2e", () => {
 
                 return pactum
                     .spec()
-                    .patch("/users")
+                    .patch("/users/me")
                     .withHeaders({
                         Authorization: "Bearer $S{access_token}",
                     })
